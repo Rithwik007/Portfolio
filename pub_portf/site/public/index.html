@@ -684,37 +684,7 @@
         </div>
     </div>
 
-    <!-- FEATURE 5: AI CHATBOT -->
-    <div class="fixed bottom-6 right-6 z-[999]">
-        <button id="chatbot-toggle" class="size-14 bg-[var(--accent)] text-[var(--bg-primary)] rounded-full flex items-center justify-center shadow-lg hover:scale-110 transition-all neon-glow" aria-label="Ask Rithwik">
-            <span class="material-symbols-outlined text-3xl">chat</span>
-        </button>
-        
-        <div id="chatbot-panel" class="absolute bottom-20 right-0 w-[360px] max-w-[calc(100vw-40px)] h-[480px] glass rounded-3xl overflow-hidden flex flex-col shadow-2xl opacity-0 translate-y-10 pointer-events-none transition-all duration-300">
-            <div class="p-4 bg-[var(--accent)]/10 border-b border-[var(--border-glass)] flex items-center justify-between">
-                <div>
-                    <h3 class="font-display font-bold text-[var(--text-primary)]">Ask Rithwik</h3>
-                    <p class="text-[var(--text-secondary)] text-[10px] uppercase tracking-widest font-bold">Powered by Gemini AI</p>
-                </div>
-                <button id="close-chatbot" class="text-[var(--text-secondary)] hover:text-[var(--accent)] transition-colors">
-                    <span class="material-symbols-outlined">close</span>
-                </button>
-            </div>
-            
-            <div id="chat-messages" class="flex-1 overflow-y-auto p-4 space-y-4 scrollbar-hide">
-                <!-- Messages will be injected here -->
-            </div>
-            
-            <div class="p-4 border-t border-[var(--border-glass)] bg-[var(--bg-secondary)]/50">
-                <div class="flex gap-2">
-                    <input type="text" id="chat-input" placeholder="Ask me something..." class="flex-1 bg-[var(--bg-primary)] border border-[var(--border-glass)] rounded-xl px-4 py-2 text-sm focus:outline-none focus:border-[var(--accent)] text-[var(--text-primary)]" />
-                    <button id="send-chat" class="bg-[var(--accent)] text-[var(--bg-primary)] p-2 rounded-xl hover:scale-105 transition-all">
-                        <span class="material-symbols-outlined">send</span>
-                    </button>
-                </div>
-            </div>
-        </div>
-    </div>
+
 
     </div>
     
@@ -925,116 +895,12 @@ Rules:
 - Never make up projects or experiences not listed above
 - Keep tone: friendly, sharp, slightly enthusiastic about tech`;
 
-            const chatbotToggle = document.getElementById('chatbot-toggle');
-            const chatbotPanel = document.getElementById('chatbot-panel');
-            const closeChatbot = document.getElementById('close-chatbot');
-            const chatMessages = document.getElementById('chat-messages');
-            const chatInput = document.getElementById('chat-input');
-            const sendChat = document.getElementById('send-chat');
-
-            let conversationHistory = [];
-            let isChatOpen = false;
-
-            function toggleChat() {
-                isChatOpen = !isChatOpen;
-                if (isChatOpen) {
-                    chatbotPanel.classList.remove('opacity-0', 'translate-y-10', 'pointer-events-none');
-                    if (conversationHistory.length === 0) {
-                        addMessage("Hey! I'm Rithwik. Ask me anything — my projects, skills, or if I'm open to work 👋", 'bot');
-                    }
-                } else {
-                    chatbotPanel.classList.add('opacity-0', 'translate-y-10', 'pointer-events-none');
-                }
-            }
-
-            chatbotToggle.addEventListener('click', toggleChat);
-            closeChatbot.addEventListener('click', toggleChat);
-
-            function addMessage(text, sender) {
-                const msgDiv = document.createElement('div');
-                msgDiv.className = `flex ${sender === 'user' ? 'justify-end' : 'justify-start'}`;
-                
-                const bubble = document.createElement('div');
-                bubble.className = `max-w-[80%] p-3 rounded-2xl text-sm ${
-                    sender === 'user' 
-                    ? 'bg-[var(--accent)] text-[var(--bg-primary)] rounded-tr-none shadow-lg' 
-                    : 'glass border border-[var(--border-glass)] text-[var(--text-primary)] rounded-tl-none'
-                }`;
-                bubble.textContent = text;
-                
-                msgDiv.appendChild(bubble);
-                chatMessages.appendChild(msgDiv);
-                chatMessages.scrollTop = chatMessages.scrollHeight;
-                
-                conversationHistory.push({ role: sender === 'user' ? 'user' : 'assistant', content: text });
-                if (conversationHistory.length > 10) conversationHistory.shift();
-            }
-
-            async function handleSendMessage() {
-                const text = chatInput.value.trim();
-                if (!text) return;
-
-                addMessage(text, 'user');
-                chatInput.value = '';
-
-                // Typing animation
-                const typingDiv = document.createElement('div');
-                typingDiv.className = 'flex justify-start';
-                typingDiv.innerHTML = `<div class="glass border border-[var(--border-glass)] p-3 rounded-2xl rounded-tl-none flex gap-1 items-center">
-                    <span class="w-1.5 h-1.5 bg-[var(--accent)] rounded-full animate-bounce"></span>
-                    <span class="w-1.5 h-1.5 bg-[var(--accent)] rounded-full animate-bounce" style="animation-delay: 0.2s"></span>
-                    <span class="w-1.5 h-1.5 bg-[var(--accent)] rounded-full animate-bounce" style="animation-delay: 0.4s"></span>
-                </div>`;
-                chatMessages.appendChild(typingDiv);
-                chatMessages.scrollTop = chatMessages.scrollHeight;
-
-                try {
-                    const response = await fetch("/api/chat", {
-                        method: "POST",
-                        headers: {
-                            "Content-Type": "application/json"
-                        },
-                        body: JSON.stringify({
-                            systemPrompt: SYSTEM_PROMPT,
-                            messages: conversationHistory.filter(m => m.role !== 'system')
-                        })
-                    });
-
-                    const data = await response.json();
-                    chatMessages.removeChild(typingDiv);
-
-                    if (data.error) {
-                        addMessage("I'm having a bit of trouble with my AI brain right now. Please make sure the Gemini API key is valid!", 'bot');
-                    } else if (data.content && data.content[0]) {
-                        addMessage(data.content[0].text, 'bot');
-                    } else {
-                        throw new Error("Invalid response");
-                    }
-                } catch (error) {
-                    console.error("Chatbot error:", error);
-                    chatMessages.removeChild(typingDiv);
-                    addMessage("I'm having trouble connecting to my brain right now. 🧠 Maybe the API key is missing in Vercel settings? Reach out: rithwikracharla@gmail.com", 'bot');
-                }
-            }
-
             window.addEventListener('keydown', (e) => {
                 if (e.key === 'Escape') {
                     if (caseStudyOverlay.classList.contains('active')) {
                         caseStudyOverlay.classList.remove('active');
                         document.body.classList.remove('no-scroll');
                     }
-                    if (blogOverlay && blogOverlay.classList.contains('active')) {
-                        blogOverlay.classList.remove('active');
-                        document.body.classList.remove('no-scroll');
-                    }
-                }
-            });
-
-            sendChat.addEventListener('click', handleSendMessage);
-            chatInput.addEventListener('keydown', (e) => {
-                if (e.key === 'Enter' && !e.shiftKey) {
-                    e.preventDefault();
-                    handleSendMessage();
                 }
             });
         })();

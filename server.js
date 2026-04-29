@@ -3,7 +3,6 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const cors = require('cors');
 const path = require('path');
-const axios = require('axios');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -23,44 +22,6 @@ app.post('/api/contact', (req, res) => {
 
     // In a real application, you might send an email or save to a database here.
     res.status(200).json({ success: true, message: 'Message received! Thank you for reaching out.' });
-});
-
-// Chatbot Proxy Route
-app.post('/api/chat', async (req, res) => {
-    const { messages, systemPrompt } = req.body;
-
-    try {
-        console.log(`Sending query to Gemini with ${messages.length} messages...`);
-        
-        // Transform messages for Gemini
-        const geminiMessages = messages.map(msg => ({
-            role: msg.role === 'assistant' ? 'model' : 'user',
-            parts: [{ text: msg.content }]
-        }));
-
-        const response = await axios.post(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${process.env.GEMINI_API_KEY}`, {
-            contents: geminiMessages,
-            system_instruction: {
-                parts: [{ text: systemPrompt }]
-            },
-            generationConfig: {
-                maxOutputTokens: 1024,
-                temperature: 0.7
-            }
-        }, {
-            headers: { 'Content-Type': 'application/json' },
-            timeout: 15000
-        });
-
-        console.log("Received response from Gemini");
-
-        // Format Gemini response to be somewhat compatible or handled by frontend
-        const text = response.data.candidates[0].content.parts[0].text;
-        res.json({ content: [{ text: text }] });
-    } catch (error) {
-        console.error('Gemini API Error:', error.response ? error.response.data : error.message);
-        res.status(500).json({ error: 'Failed to communicate with AI' });
-    }
 });
 
 // Serve index.html for all other routes (Single Page Application style)
