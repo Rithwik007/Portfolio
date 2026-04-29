@@ -1,7 +1,9 @@
+require('dotenv').config();
 const express = require('express');
 const bodyParser = require('body-parser');
 const cors = require('cors');
 const path = require('path');
+const axios = require('axios');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -21,6 +23,31 @@ app.post('/api/contact', (req, res) => {
 
     // In a real application, you might send an email or save to a database here.
     res.status(200).json({ success: true, message: 'Message received! Thank you for reaching out.' });
+});
+
+// Chatbot Proxy Route
+app.post('/api/chat', async (req, res) => {
+    const { messages, systemPrompt } = req.body;
+
+    try {
+        const response = await axios.post('https://api.anthropic.com/v1/messages', {
+            model: "claude-3-haiku-20240307",
+            max_tokens: 1024,
+            system: systemPrompt,
+            messages: messages
+        }, {
+            headers: {
+                'Content-Type': 'application/json',
+                'x-api-key': process.env.ANTHROPIC_API_KEY,
+                'anthropic-version': '2023-06-01'
+            }
+        });
+
+        res.json(response.data);
+    } catch (error) {
+        console.error('Anthropic API Error:', error.response ? error.response.data : error.message);
+        res.status(500).json({ error: 'Failed to communicate with AI' });
+    }
 });
 
 // Serve index.html for all other routes (Single Page Application style)
