@@ -30,25 +30,35 @@ app.post('/api/chat', async (req, res) => {
     const { messages, systemPrompt } = req.body;
 
     try {
-        console.log(`Sending query to Anthropic with ${messages.length} messages...`);
-        const response = await axios.post('https://api.anthropic.com/v1/messages', {
-            model: "claude-3-5-sonnet-20240620",
-            max_tokens: 1024,
-            system: systemPrompt,
-            messages: messages
-        }, {
-            headers: {
-                'Content-Type': 'application/json',
-                'x-api-key': process.env.ANTHROPIC_API_KEY,
-                'anthropic-version': '2023-06-01'
+        console.log(`Sending query to Gemini with ${messages.length} messages...`);
+        
+        // Transform messages for Gemini
+        const geminiMessages = messages.map(msg => ({
+            role: msg.role === 'assistant' ? 'model' : 'user',
+            parts: [{ text: msg.content }]
+        }));
+
+        const response = await axios.post(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${process.env.GEMINI_API_KEY}`, {
+            contents: geminiMessages,
+            system_instruction: {
+                parts: [{ text: systemPrompt }]
             },
+            generationConfig: {
+                maxOutputTokens: 1024,
+                temperature: 0.7
+            }
+        }, {
+            headers: { 'Content-Type': 'application/json' },
             timeout: 15000
         });
-        console.log("Received response from Anthropic");
 
-        res.json(response.data);
+        console.log("Received response from Gemini");
+
+        // Format Gemini response to be somewhat compatible or handled by frontend
+        const text = response.data.candidates[0].content.parts[0].text;
+        res.json({ content: [{ text: text }] });
     } catch (error) {
-        console.error('Anthropic API Error:', error.response ? error.response.data : error.message);
+        console.error('Gemini API Error:', error.response ? error.response.data : error.message);
         res.status(500).json({ error: 'Failed to communicate with AI' });
     }
 });
