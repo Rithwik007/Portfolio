@@ -31,7 +31,7 @@ app.post('/api/chat', async (req, res) => {
 
     try {
         const response = await axios.post('https://api.anthropic.com/v1/messages', {
-            model: "claude-3-haiku-20240307",
+            model: "claude-3-5-sonnet-20240620",
             max_tokens: 1024,
             system: systemPrompt,
             messages: messages
