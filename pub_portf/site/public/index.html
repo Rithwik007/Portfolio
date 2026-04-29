@@ -527,15 +527,15 @@
                     <!-- Habit Tracker -->
                     <div class="glass card-3d project-card rounded-2xl overflow-hidden border border-white/5 hover:border-primary/40 transition-all duration-300 hover:shadow-[0_0_30px_rgba(179,136,255,0.2)] flex flex-col reveal" data-cursor="View">
                         <div class="gloss"></div>
-                        <div class="relative aspect-video overflow-hidden bg-slate-900 pointer-events-none">
-                            <img alt="Habit Tracker App Preview" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105 opacity-80 hover:opacity-100" src="/habit_tracker.png" />
-                            <div class="project-demo-preview"></div>
-                            <div class="project-overlay">
-                                <span class="text-white font-bold text-xl">View Live ↗</span>
+                        <a href="https://habit-tracker-web2.vercel.app/" target="_blank" rel="noopener" class="relative aspect-video overflow-hidden bg-slate-900 block group">
+                            <img alt="Habit Tracker App Preview" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110 opacity-80 group-hover:opacity-100" src="/habit_tracker.png" />
+                            <div class="project-overlay group-hover:opacity-100 transition-opacity duration-300">
+                                <div class="flex flex-col items-center gap-2 transform translate-y-4 group-hover:translate-y-0 transition-transform duration-300">
+                                    <span class="text-white font-bold text-xl tracking-tight">View Live</span>
+                                    <span class="material-symbols-outlined text-white text-3xl">north_east</span>
+                                </div>
                             </div>
-                            <div class="absolute inset-0 bg-gradient-to-t from-[var(--bg-primary)]/80 via-transparent to-transparent"></div>
-                            <span class="absolute top-3 right-3 bg-[var(--accent)]/20 border border-[var(--accent)]/40 text-[var(--accent)] text-xs font-bold px-3 py-1 rounded-full backdrop-blur-sm">Web App</span>
-                        </div>
+                        </a>
                         <div class="p-6 flex flex-col flex-1 pointer-events-none">
                             <h4 class="font-display text-xl font-bold text-[var(--text-primary)] mb-2">Habit Tracker</h4>
                             <p class="text-[var(--text-secondary)] text-sm mb-4 leading-relaxed flex-1">Interactive daily checklists and monthly calendar grid with real-time weather, a custom timer, and analytics charts — all backed by Supabase and a glassmorphic UI.</p>
@@ -564,15 +564,15 @@
                     <!-- Library Management System -->
                     <div class="glass card-3d project-card rounded-2xl overflow-hidden border border-white/5 hover:border-[var(--accent)]/40 transition-all duration-300 hover:shadow-[0_0_30px_rgba(179,136,255,0.2)] flex flex-col reveal" data-cursor="View">
                         <div class="gloss"></div>
-                        <div class="relative aspect-video overflow-hidden bg-slate-900 pointer-events-none">
-                            <img alt="Library Management System Preview" class="w-full h-full object-cover transition-transform duration-500 opacity-80 hover:opacity-100" src="/library_mgmt.png" />
-                            <div class="project-demo-preview"></div>
-                            <div class="project-overlay">
-                                <span class="text-white font-bold text-xl">View Live ↗</span>
+                        <a href="https://library-management-frontend-ten-tan.vercel.app/" target="_blank" rel="noopener" class="relative aspect-video overflow-hidden bg-slate-900 block group">
+                            <img alt="Library Management System Preview" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110 opacity-80 group-hover:opacity-100" src="/library_mgmt.png" />
+                            <div class="project-overlay group-hover:opacity-100 transition-opacity duration-300">
+                                <div class="flex flex-col items-center gap-2 transform translate-y-4 group-hover:translate-y-0 transition-transform duration-300">
+                                    <span class="text-white font-bold text-xl tracking-tight">View Live</span>
+                                    <span class="material-symbols-outlined text-white text-3xl">north_east</span>
+                                </div>
                             </div>
-                            <div class="absolute inset-0 bg-gradient-to-t from-[var(--bg-primary)]/80 via-transparent to-transparent"></div>
-                            <span class="absolute top-3 right-3 bg-[var(--accent)]/20 border border-[var(--accent)]/40 text-[var(--accent)] text-xs font-bold px-3 py-1 rounded-full backdrop-blur-sm">Full Stack</span>
-                        </div>
+                        </a>
                         <div class="p-6 flex flex-col flex-1 pointer-events-none">
                             <h4 class="font-display text-xl font-bold text-[var(--text-primary)] mb-2">Library Management System</h4>
                             <p class="text-[var(--text-secondary)] text-sm mb-4 leading-relaxed flex-1">Full-stack system with custom dashboards for students, faculty, and admins. Supports book issue/return workflows, RESTful APIs, and role-based access control.</p>
@@ -1010,7 +1010,9 @@ Rules:
                     const data = await response.json();
                     chatMessages.removeChild(typingDiv);
 
-                    if (data.content && data.content[0]) {
+                    if (data.error && data.error.message && data.error.message.includes("credit balance")) {
+                        addMessage("It looks like the AI credits for this key have run out. Please check your Anthropic billing dashboard! 💳", 'bot');
+                    } else if (data.content && data.content[0]) {
                         addMessage(data.content[0].text, 'bot');
                     } else {
                         throw new Error("Invalid response");
