@@ -9,35 +9,57 @@
     <link
         href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
         rel="stylesheet" />
+    <script>
+        (function() {
+            const savedTheme = localStorage.getItem('theme') || 'dark';
+            document.documentElement.setAttribute('data-theme', savedTheme);
+            if (savedTheme === 'dark') {
+                document.documentElement.classList.add('dark');
+            } else {
+                document.documentElement.classList.remove('dark');
+            }
+        })();
+    </script>
     <style>
         :root {
             /* Dark Mode (Default) */
-            --bg: #0a0a0f;
-            --surface: #13131a;
-            --text: #e8e8f0;
-            --muted: #7070a0;
+            --bg-primary: #0a0a0f;
+            --bg-secondary: #13131a;
+            --bg-glass: rgba(255, 255, 255, 0.08);
+            --text-primary: #e8e8f0;
+            --text-secondary: #7070a0;
             --accent: #b388ff;
-            --border: rgba(255, 255, 255, 0.08);
-            --neon-shadow: rgba(179, 136, 255, 0.4);
+            --border-glass: rgba(255, 255, 255, 0.08);
+            --shadow: rgba(179, 136, 255, 0.4);
         }
 
-
+        [data-theme="light"] {
+            --bg-primary: #f4f4f0;
+            --bg-secondary: #ffffff;
+            --bg-glass: rgba(255, 255, 255, 0.6);
+            --text-primary: #1a1a1a;
+            --text-secondary: #444444;
+            --accent: #b388ff;
+            --border-glass: rgba(0, 0, 0, 0.1);
+            --shadow: rgba(0, 0, 0, 0.12);
+        }
 
         body {
-            background-color: var(--bg);
-            color: var(--text);
-            transition: background-color 0.4s, color 0.4s;
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
+            transition: background 0.2s, color 0.2s;
         }
 
         .glass {
-            background: var(--border);
+            background: var(--bg-glass);
             backdrop-filter: blur(12px);
             -webkit-backdrop-filter: blur(12px);
-            border: 1px solid var(--border);
+            border: 1px solid var(--border-glass);
+            transition: background 0.2s, border 0.2s;
         }
 
         .neon-glow {
-            box-shadow: 0 0 15px var(--neon-shadow);
+            box-shadow: 0 0 15px var(--shadow);
         }
 
         .mesh-bg {
@@ -86,6 +108,120 @@
             clip-path: inset(100% 0 0 0);
             transition: -webkit-clip-path 0.6s cubic-bezier(0.76, 0, 0.24, 1), clip-path 0.6s cubic-bezier(0.76, 0, 0.24, 1);
         }
+
+        .project-demo-preview {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
+            background-size: 200% 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            transition: opacity 0.3s;
+            pointer-events: none;
+            z-index: 5;
+        }
+
+        .project-demo-preview::after {
+            content: "▶ Click Live Demo to preview";
+            color: white;
+            font-size: 0.75rem;
+            font-weight: 600;
+            background: rgba(0,0,0,0.5);
+            padding: 4px 12px;
+            border-radius: 99px;
+            backdrop-filter: blur(4px);
+        }
+
+        .card-3d:hover .project-demo-preview {
+            opacity: 1;
+            animation: shimmer 2s infinite;
+        }
+
+        @keyframes shimmer {
+            0% { background-position: -200% 0; }
+            100% { background-position: 200% 0; }
+        }
+
+        .project-overlay {
+            position: absolute;
+            inset: 0;
+            background: rgba(0,0,0,0.7);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            z-index: 10;
+            pointer-events: none;
+            backdrop-filter: blur(2px);
+        }
+
+        .card-3d:hover .project-overlay {
+            opacity: 1;
+        }
+
+        .case-study-overlay {
+            position: fixed;
+            inset: 0;
+            z-index: 1000;
+            background: rgba(0,0,0,0.96);
+            backdrop-filter: blur(12px);
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.4s ease;
+            overflow-y: auto;
+            display: flex;
+            justify-content: center;
+            padding: 40px 20px;
+        }
+
+        .case-study-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .case-study-content {
+            max-width: 800px;
+            width: 100%;
+            background: transparent;
+            color: var(--text-primary);
+            transform: translateY(40px);
+            transition: transform 0.4s ease;
+        }
+
+        .case-study-overlay.active .case-study-content {
+            transform: translateY(0);
+        }
+
+        .placeholder-box {
+            border: 2px dashed var(--text-secondary);
+            padding: 20px;
+            border-radius: 12px;
+            color: var(--text-secondary);
+            font-style: italic;
+            margin: 10px 0;
+        }
+
+        .metric-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .metric-card {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-glass);
+            padding: 20px;
+            border-radius: 16px;
+            text-align: center;
+        }
+        
+        .no-scroll {
+            overflow: hidden;
+        }
     </style>
     <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
     <script id="tailwind-config">
@@ -95,12 +231,12 @@
                 extend: {
                     colors: {
                         "primary": "var(--accent)",
-                        "background-light": "var(--bg)",
-                        "background-dark": "var(--bg)",
-                        "surface": "var(--surface)",
-                        "text-main": "var(--text)",
-                        "muted-lavender": "var(--muted)",
-                        "border-main": "var(--border)",
+                        "background-light": "var(--bg-primary)",
+                        "background-dark": "var(--bg-primary)",
+                        "surface": "var(--bg-secondary)",
+                        "text-main": "var(--text-primary)",
+                        "muted-lavender": "var(--text-secondary)",
+                        "border-main": "var(--border-glass)",
                         "success-green": "#00FF9D",
                     },
                     fontFamily: {
@@ -121,11 +257,11 @@
 </head>
 
 <body
-    class="bg-[var(--bg)] font-body text-[var(--text)] overflow-x-hidden">
-    <div class="fixed inset-0 z-[100] hidden items-center justify-center p-6 bg-[var(--bg)]/80 backdrop-blur-md"
+    class="bg-[var(--bg-primary)] font-body text-[var(--text-primary)] overflow-x-hidden">
+    <div class="fixed inset-0 z-[100] hidden items-center justify-center p-6 bg-[var(--bg-primary)]/80 backdrop-blur-md"
         id="contact-modal">
-        <div class="bg-[var(--surface)] max-w-md w-full p-8 rounded-3xl relative border border-[var(--accent)]/30 neon-glow">
-            <a class="absolute top-6 right-6 text-[var(--muted)] hover:text-[var(--accent)] transition-colors" href="#" data-cursor="Close">
+        <div class="bg-[var(--bg-secondary)] max-w-md w-full p-8 rounded-3xl relative border border-[var(--accent)]/30 neon-glow">
+            <a class="absolute top-6 right-6 text-[var(--text-secondary)] hover:text-[var(--accent)] transition-colors" href="#" data-cursor="Close">
                 <span class="material-symbols-outlined">close</span>
             </a>
             <div class="flex flex-col items-center text-center gap-6">
@@ -134,28 +270,28 @@
                     <span class="material-symbols-outlined text-[var(--accent)] text-4xl">contact_page</span>
                 </div>
                 <div>
-                    <h2 class="font-display text-3xl font-black text-[var(--text)] mb-2">Get in Touch</h2>
-                    <p class="text-[var(--muted)]">Feel free to reach out for collaborations or just a friendly hello.
+                    <h2 class="font-display text-3xl font-black text-[var(--text-primary)] mb-2">Get in Touch</h2>
+                    <p class="text-[var(--text-secondary)]">Feel free to reach out for collaborations or just a friendly hello.
                     </p>
                 </div>
                 <div class="w-full space-y-8" id="contact-form-container">
                     <!-- Static Contact Info Only -->
                     <div class="grid grid-cols-1 gap-6">
-                        <a href="tel:+917013560134" class="bg-[var(--bg)] p-6 rounded-3xl flex flex-col items-center gap-4 group transition-all hover:bg-[var(--accent)]/10 border border-white/10 hover:border-[var(--accent)]/50" data-cursor="Call">
+                        <a href="tel:+917013560134" class="bg-[var(--bg-primary)] p-6 rounded-3xl flex flex-col items-center gap-4 group transition-all hover:bg-[var(--accent)]/10 border border-white/10 hover:border-[var(--accent)]/50" data-cursor="Call">
                             <div class="size-14 bg-[var(--accent)]/10 rounded-full flex items-center justify-center border border-[var(--accent)]/30 group-hover:scale-110 transition-transform">
                                 <span class="material-symbols-outlined text-[var(--accent)] text-3xl">phone_iphone</span>
                             </div>
                             <div class="text-center">
-                                <p class="text-xs text-[var(--muted)] uppercase font-bold tracking-widest mb-1">Mobile</p>
+                                <p class="text-xs text-[var(--text-secondary)] uppercase font-bold tracking-widest mb-1">Mobile</p>
                                 <p class="text-white text-xl font-bold tracking-tight">+91 7013560134</p>
                             </div>
                         </a>
-                        <a href="mailto:rithwikracharla@gmail.com" class="bg-[var(--bg)] p-6 rounded-3xl flex flex-col items-center gap-4 group transition-all hover:bg-[var(--accent)]/10 border border-white/10 hover:border-[var(--accent)]/50" data-cursor="Mail">
+                        <a href="mailto:rithwikracharla@gmail.com" class="bg-[var(--bg-primary)] p-6 rounded-3xl flex flex-col items-center gap-4 group transition-all hover:bg-[var(--accent)]/10 border border-white/10 hover:border-[var(--accent)]/50" data-cursor="Mail">
                             <div class="size-14 bg-[var(--accent)]/10 rounded-full flex items-center justify-center border border-[var(--accent)]/30 group-hover:scale-110 transition-transform">
                                 <span class="material-symbols-outlined text-[var(--accent)] text-3xl">mail</span>
                             </div>
                             <div class="text-center">
-                                <p class="text-xs text-[var(--muted)] uppercase font-bold tracking-widest mb-1">Email</p>
+                                <p class="text-xs text-[var(--text-secondary)] uppercase font-bold tracking-widest mb-1">Email</p>
                                 <p class="text-white text-xl font-bold tracking-tight">rithwikracharla@gmail.com</p>
                             </div>
                         </a>
@@ -178,11 +314,17 @@
                     <a class="text-sm font-medium hover:text-primary transition-colors text-white"
                         href="#projects" data-cursor="→">Projects</a>
                     <a class="text-sm font-medium hover:text-primary transition-colors text-white"
+                        href="#blog" data-cursor="→">Blog</a>
+                    <a class="text-sm font-medium hover:text-primary transition-colors text-white"
                         href="#contact-modal" data-cursor="→">Contact</a>
                 </div>
                 <div class="flex items-center gap-4">
+                    <button id="theme-toggle" class="p-2 rounded-full hover:bg-[var(--accent)]/10 transition-all group" aria-label="Toggle Theme" data-cursor="Toggle">
+                        <svg id="theme-toggle-dark-icon" class="w-6 h-6 text-[var(--accent)] hidden" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.706.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-7 4a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM5.05 6.464A1 1 0 106.465 5.05l-.708-.707a1 1 0 00-1.414 1.414l.707.707zm1.414 8.486l-.707.707a1 1 0 01-1.414-1.414l.707-.707a1 1 0 011.414 1.414zM4 11a1 1 0 100-2H3a1 1 0 000 2h1z"></path></svg>
+                        <svg id="theme-toggle-light-icon" class="w-6 h-6 text-[var(--accent)] hidden" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"></path></svg>
+                    </button>
                     <a href="/Resume_final_final.pdf" target="_blank"
-                        class="bg-[var(--accent)] hover:scale-105 text-[var(--bg)] px-6 py-2 rounded-full font-bold text-sm transition-all neon-glow btn-slide" data-cursor="Download">
+                        class="bg-[var(--accent)] hover:scale-105 text-[var(--bg-primary)] px-6 py-2 rounded-full font-bold text-sm transition-all neon-glow btn-slide" data-cursor="Download">
                         Resume
                     </a>
                 </div>
@@ -205,7 +347,7 @@
                         <span class="text-xs font-semibold tracking-wider uppercase text-slate-100">Available for
                             work</span>
                     </div>
-                    <h1 class="font-display text-5xl md:text-7xl font-black leading-tight tracking-tight text-[var(--text)] reveal">
+                    <h1 class="font-display text-5xl md:text-7xl font-black leading-tight tracking-tight text-[var(--text-primary)] reveal">
                         Hi, I'm <span class="font-stylish text-[var(--accent)] text-7xl md:text-9xl block mt-4 hover:scale-105 transition-transform cursor-default">Rithwik Racharla</span>. I build the future with Code.
                     </h1>
                     <p class="text-lg md:text-xl text-muted-lavender max-w-2xl leading-relaxed reveal">
@@ -213,12 +355,12 @@
                         CS Undergrad | Full Stack Developer | Agentic AI Enthusiast.
                     </p>
                     <div class="flex flex-col sm:flex-row gap-4 mt-4 reveal">
-                        <a class="bg-[var(--accent)] hover:scale-105 text-[var(--bg)] px-10 py-4 rounded-full font-black text-lg transition-all neon-glow flex items-center gap-2 justify-center btn-slide"
+                        <a class="bg-[var(--accent)] hover:scale-105 text-[var(--bg-primary)] px-10 py-4 rounded-full font-black text-lg transition-all neon-glow flex items-center gap-2 justify-center btn-slide"
                             href="#projects" data-cursor="View">
                             View Projects
                             <span class="material-symbols-outlined">arrow_forward</span>
                         </a>
-                        <a class="glass hover:bg-white/10 text-[var(--text)] px-10 py-4 rounded-full font-black text-lg transition-all flex items-center gap-2 justify-center btn-slide"
+                        <a class="glass hover:bg-white/10 text-[var(--text-primary)] px-10 py-4 rounded-full font-black text-lg transition-all flex items-center gap-2 justify-center btn-slide"
                             href="#contact-modal" data-cursor="Open">
                             Contact Me
                         </a>
@@ -227,7 +369,7 @@
                 <div
                     class="absolute bottom-12 left-1/2 -translate-x-1/2 md:left-auto md:right-12 md:bottom-1/2 md:translate-y-1/2 md:translate-x-0">
                     <div class="glass p-3 flex md:flex-col gap-6 rounded-2xl border border-white/10">
-                        <a class="p-3 rounded-xl hover:bg-[var(--accent)]/20 hover:text-[var(--accent)] transition-all text-[var(--muted)]"
+                        <a class="p-3 rounded-xl hover:bg-[var(--accent)]/20 hover:text-[var(--accent)] transition-all text-[var(--text-secondary)]"
                             href="https://github.com/Rithwik007" target="_blank" data-cursor="Github">
                             <svg class="size-6 fill-currentColor" viewBox="0 0 24 24">
                                 <path
@@ -235,7 +377,7 @@
                                 </path>
                             </svg>
                         </a>
-                        <a class="p-3 rounded-xl hover:bg-[var(--accent)]/20 hover:text-[var(--accent)] transition-all text-[var(--muted)]"
+                        <a class="p-3 rounded-xl hover:bg-[var(--accent)]/20 hover:text-[var(--accent)] transition-all text-[var(--text-secondary)]"
                             href="https://www.linkedin.com/in/rithwik-racharla-488064211" target="_blank" data-cursor="Linkedin">
                             <svg class="size-6 fill-currentColor" viewBox="0 0 24 24">
                                 <path
@@ -257,8 +399,8 @@
                         </div>
                     </div>
                     <div class="w-full md:w-2/3 flex flex-col gap-6 reveal">
-                        <h3 class="font-display text-3xl font-bold text-[var(--text)]">About Me</h3>
-                        <p class="text-[var(--muted)] text-lg leading-relaxed">
+                        <h3 class="font-display text-3xl font-bold text-[var(--text-primary)]">About Me</h3>
+                        <p class="text-[var(--text-secondary)] text-lg leading-relaxed">
                             I'm a Computer Science student at VNR VJIET with a passion for building intelligent systems.
                             My journey in tech is driven by curiosity and a relentless desire to innovate.
                             From crafting seamless full-stack applications to exploring the frontiers of Agentic AI,
@@ -285,7 +427,7 @@
             </section>
             <section class="max-w-6xl mx-auto px-6 py-24 w-full reveal" id="skills">
                 <div class="flex flex-col items-center mb-16 reveal">
-                    <h2 class="font-display text-4xl md:text-5xl font-black text-[var(--text)] mb-4">Technical Arsenal</h2>
+                    <h2 class="font-display text-4xl md:text-5xl font-black text-[var(--text-primary)] mb-4">Technical Arsenal</h2>
                     <div class="w-24 h-1 bg-[var(--accent)] rounded-full"></div>
                 </div>
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto stagger">
@@ -294,23 +436,23 @@
                             class="size-14 bg-[var(--accent)]/10 rounded-xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
                             <span class="material-symbols-outlined text-[var(--accent)] text-3xl">code</span>
                         </div>
-                        <h3 class="font-display text-2xl font-bold text-[var(--text)] mb-6">Development</h3>
-                        <ul class="space-y-4 text-[var(--muted)]">
+                        <h3 class="font-display text-2xl font-bold text-[var(--text-primary)] mb-6">Development</h3>
+                        <ul class="space-y-4 text-[var(--text-secondary)]">
                             <li class="flex items-center gap-3">
                                 <span class="size-1.5 bg-primary rounded-full"></span>
-                                <span>Node.js</span>
+                                <span>React 19 &amp; Vite</span>
                             </li>
                             <li class="flex items-center gap-3">
                                 <span class="size-1.5 bg-primary rounded-full"></span>
-                                <span>Express</span>
+                                <span>Node.js &amp; Express</span>
                             </li>
                             <li class="flex items-center gap-3">
                                 <span class="size-1.5 bg-primary rounded-full"></span>
-                                <span>MongoDB</span>
+                                <span>MongoDB &amp; Mongoose</span>
                             </li>
                             <li class="flex items-center gap-3">
                                 <span class="size-1.5 bg-primary rounded-full"></span>
-                                <span>HTML &amp; CSS</span>
+                                <span>JWT Authentication</span>
                             </li>
                         </ul>
                     </div>
@@ -319,15 +461,15 @@
                             class="size-14 bg-[var(--accent)]/10 rounded-xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
                             <span class="material-symbols-outlined text-[var(--accent)] text-3xl">construction</span>
                         </div>
-                        <h3 class="font-display text-2xl font-bold text-[var(--text)] mb-6">Tools &amp; Others</h3>
-                        <ul class="space-y-4 text-[var(--muted)]">
+                        <h3 class="font-display text-2xl font-bold text-[var(--text-primary)] mb-6">Tools &amp; Others</h3>
+                        <ul class="space-y-4 text-[var(--text-secondary)]">
                             <li class="flex items-center gap-3">
                                 <span class="size-1.5 bg-primary rounded-full"></span>
-                                <span>Agentic AI</span>
+                                <span>RESTful APIs</span>
                             </li>
                             <li class="flex items-center gap-3">
                                 <span class="size-1.5 bg-primary rounded-full"></span>
-                                <span>DSA</span>
+                                <span>Agentic AI &amp; DSA</span>
                             </li>
                             <li class="flex items-center gap-3">
                                 <span class="size-1.5 bg-primary rounded-full"></span>
@@ -343,53 +485,79 @@
             </section>
             <section class="max-w-6xl mx-auto px-6 py-24 w-full reveal" id="projects">
                 <div class="flex flex-col items-center mb-16 text-center reveal">
-                    <h2 class="font-display text-4xl md:text-5xl font-black text-[var(--text)] mb-4">Featured Works</h2>
-                    <p class="text-[var(--muted)] max-w-xl">A selection of my recent projects — from full-stack applications to intelligent systems.</p>
+                    <h2 class="font-display text-4xl md:text-5xl font-black text-[var(--text-primary)] mb-4">Featured Works</h2>
+                    <p class="text-[var(--text-secondary)] max-w-xl">A selection of my recent projects — from full-stack applications to intelligent systems.</p>
                 </div>
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 stagger">
                     <!-- Habit Tracker -->
-                    <div class="glass card-3d rounded-2xl overflow-hidden border border-white/5 hover:border-primary/40 transition-all duration-300 hover:shadow-[0_0_30px_rgba(179,136,255,0.2)] flex flex-col reveal" data-cursor="View">
+                    <div class="glass card-3d project-card rounded-2xl overflow-hidden border border-white/5 hover:border-primary/40 transition-all duration-300 hover:shadow-[0_0_30px_rgba(179,136,255,0.2)] flex flex-col reveal" data-cursor="View">
                         <div class="gloss"></div>
                         <div class="relative aspect-video overflow-hidden bg-slate-900 pointer-events-none">
                             <img alt="Habit Tracker App Preview" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105 opacity-80 hover:opacity-100" src="/habit_tracker.png" />
-                            <div class="absolute inset-0 bg-gradient-to-t from-[var(--bg)]/80 via-transparent to-transparent"></div>
+                            <div class="project-demo-preview"></div>
+                            <div class="project-overlay">
+                                <span class="text-white font-bold text-xl">View Live ↗</span>
+                            </div>
+                            <div class="absolute inset-0 bg-gradient-to-t from-[var(--bg-primary)]/80 via-transparent to-transparent"></div>
                             <span class="absolute top-3 right-3 bg-[var(--accent)]/20 border border-[var(--accent)]/40 text-[var(--accent)] text-xs font-bold px-3 py-1 rounded-full backdrop-blur-sm">Web App</span>
                         </div>
                         <div class="p-6 flex flex-col flex-1 pointer-events-none">
-                            <h4 class="font-display text-xl font-bold text-[var(--text)] mb-2">Habit Tracker</h4>
-                            <p class="text-[var(--muted)] text-sm mb-4 leading-relaxed flex-1">Interactive daily checklists and monthly calendar grid with real-time weather, a custom timer, and analytics charts — all backed by Supabase and a glassmorphic UI.</p>
+                            <h4 class="font-display text-xl font-bold text-[var(--text-primary)] mb-2">Habit Tracker</h4>
+                            <p class="text-[var(--text-secondary)] text-sm mb-4 leading-relaxed flex-1">Interactive daily checklists and monthly calendar grid with real-time weather, a custom timer, and analytics charts — all backed by Supabase and a glassmorphic UI.</p>
                             <div class="flex flex-wrap gap-2 mb-5">
-                                <span class="bg-white/5 border border-white/10 text-[var(--muted)] text-xs px-3 py-1 rounded-full font-medium">React.js</span>
+                                <span class="bg-white/5 border border-white/10 text-[var(--text-secondary)] text-xs px-3 py-1 rounded-full font-medium">React.js</span>
                             </div>
-                            <div class="flex gap-3 pointer-events-auto">
-                                <a href="https://github.com/Rithwik007" target="_blank"
-                                    class="flex-1 flex items-center justify-center gap-2 bg-[var(--accent)] text-[var(--bg)] font-bold py-2.5 rounded-xl text-sm transition-all hover:scale-[1.03] neon-glow">
-                                    <svg class="size-4 fill-current" viewBox="0 0 24 24"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg>
-                                    Code
+                            <div class="flex flex-col gap-3 pointer-events-auto">
+                                <div class="flex gap-3">
+                                    <a href="https://github.com/Rithwik007" target="_blank"
+                                        class="flex-1 flex items-center justify-center gap-2 border border-[var(--accent)]/40 text-[var(--accent)] font-bold py-2.5 rounded-xl text-sm transition-all hover:bg-[var(--accent)]/10">
+                                        <svg class="size-4 fill-current" viewBox="0 0 24 24"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg>
+                                        Code
+                                    </a>
+                                    <a href="https://habit-tracker-web2.vercel.app/login" data-demo-url="https://github.com/Rithwik007" target="_blank" rel="noopener"
+                                        class="flex-1 flex items-center justify-center gap-2 bg-[var(--accent)] text-[var(--bg-primary)] font-bold py-2.5 rounded-xl text-sm transition-all hover:scale-[1.03] neon-glow">
+                                        Live Demo <span>↗</span>
+                                    </a>
+                                </div>
+                                <a href="#" class="text-[var(--accent)] text-xs font-bold flex items-center gap-1 hover:gap-2 transition-all open-case-study mt-1" data-project="habit-tracker">
+                                    Case Study <span class="material-symbols-outlined text-sm">east</span>
                                 </a>
                             </div>
                         </div>
                     </div>
 
                     <!-- Library Management System -->
-                    <div class="glass card-3d rounded-2xl overflow-hidden border border-white/5 hover:border-[var(--accent)]/40 transition-all duration-300 hover:shadow-[0_0_30px_rgba(179,136,255,0.2)] flex flex-col reveal" data-cursor="View">
+                    <div class="glass card-3d project-card rounded-2xl overflow-hidden border border-white/5 hover:border-[var(--accent)]/40 transition-all duration-300 hover:shadow-[0_0_30px_rgba(179,136,255,0.2)] flex flex-col reveal" data-cursor="View">
                         <div class="gloss"></div>
                         <div class="relative aspect-video overflow-hidden bg-slate-900 pointer-events-none">
                             <img alt="Library Management System Preview" class="w-full h-full object-cover transition-transform duration-500 opacity-80 hover:opacity-100" src="/library_mgmt.png" />
-                            <div class="absolute inset-0 bg-gradient-to-t from-[var(--bg)]/80 via-transparent to-transparent"></div>
+                            <div class="project-demo-preview"></div>
+                            <div class="project-overlay">
+                                <span class="text-white font-bold text-xl">View Live ↗</span>
+                            </div>
+                            <div class="absolute inset-0 bg-gradient-to-t from-[var(--bg-primary)]/80 via-transparent to-transparent"></div>
                             <span class="absolute top-3 right-3 bg-[var(--accent)]/20 border border-[var(--accent)]/40 text-[var(--accent)] text-xs font-bold px-3 py-1 rounded-full backdrop-blur-sm">Full Stack</span>
                         </div>
                         <div class="p-6 flex flex-col flex-1 pointer-events-none">
-                            <h4 class="font-display text-xl font-bold text-[var(--text)] mb-2">Library Management System</h4>
-                            <p class="text-[var(--muted)] text-sm mb-4 leading-relaxed flex-1">Full-stack system with custom dashboards for students, faculty, and admins. Supports book issue/return workflows, RESTful APIs, and role-based access control.</p>
+                            <h4 class="font-display text-xl font-bold text-[var(--text-primary)] mb-2">Library Management System</h4>
+                            <p class="text-[var(--text-secondary)] text-sm mb-4 leading-relaxed flex-1">Full-stack system with custom dashboards for students, faculty, and admins. Supports book issue/return workflows, RESTful APIs, and role-based access control.</p>
                             <div class="flex flex-wrap gap-2 mb-5">
-                                <span class="bg-white/5 border border-white/10 text-[var(--muted)] text-xs px-3 py-1 rounded-full font-medium">Node.js</span>
+                                <span class="bg-white/5 border border-white/10 text-[var(--text-secondary)] text-xs px-3 py-1 rounded-full font-medium">Node.js</span>
                             </div>
-                            <div class="flex gap-3 pointer-events-auto">
-                                <a href="https://github.com/Rithwik007" target="_blank"
-                                    class="flex-1 flex items-center justify-center gap-2 bg-[var(--accent)] text-[var(--bg)] font-bold py-2.5 rounded-xl text-sm transition-all hover:scale-[1.03] neon-glow">
-                                    <svg class="size-4 fill-current" viewBox="0 0 24 24"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg>
-                                    Code
+                            <div class="flex flex-col gap-3 pointer-events-auto">
+                                <div class="flex gap-3">
+                                    <a href="https://github.com/Rithwik007" target="_blank"
+                                        class="flex-1 flex items-center justify-center gap-2 border border-[var(--accent)]/40 text-[var(--accent)] font-bold py-2.5 rounded-xl text-sm transition-all hover:bg-[var(--accent)]/10">
+                                        <svg class="size-4 fill-current" viewBox="0 0 24 24"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg>
+                                        Code
+                                    </a>
+                                    <a href="#" data-demo-url="https://github.com/Rithwik007" target="_blank" rel="noopener"
+                                        class="flex-1 flex items-center justify-center gap-2 bg-[var(--accent)] text-[var(--bg-primary)] font-bold py-2.5 rounded-xl text-sm transition-all hover:scale-[1.03] neon-glow">
+                                        Live Demo <span>↗</span>
+                                    </a>
+                                </div>
+                                <a href="#" class="text-[var(--accent)] text-xs font-bold flex items-center gap-1 hover:gap-2 transition-all open-case-study mt-1" data-project="library-mgmt">
+                                    Case Study <span class="material-symbols-outlined text-sm">east</span>
                                 </a>
                             </div>
                         </div>
@@ -402,8 +570,8 @@
                             <span class="material-symbols-outlined text-[var(--accent)] text-3xl">rocket_launch</span>
                         </div>
                         <div>
-                            <h4 class="font-display text-xl font-bold text-[var(--text)] mb-2">More Coming Soon</h4>
-                            <p class="text-[var(--muted)] text-sm leading-relaxed">Currently building the next thing. Follow along on GitHub.</p>
+                            <h4 class="font-display text-xl font-bold text-[var(--text-primary)] mb-2">More Coming Soon</h4>
+                            <p class="text-[var(--text-secondary)] text-sm leading-relaxed">Currently building the next thing. Follow along on GitHub.</p>
                         </div>
                         <a href="https://github.com/Rithwik007" target="_blank"
                             class="flex items-center gap-2 border border-[var(--accent)]/40 text-[var(--accent)] font-bold px-6 py-2.5 rounded-xl text-sm transition-all hover:bg-[var(--accent)]/10" data-cursor="Rocket">
@@ -414,22 +582,36 @@
 
                 </div>
             </section>
+            <!-- Blog Section -->
+            <section class="max-w-6xl mx-auto px-6 py-24 w-full reveal" id="blog">
+                <div class="flex flex-col items-center mb-16 text-center reveal">
+                    <h2 class="font-display text-4xl md:text-5xl font-black text-[var(--text-primary)] mb-4">Thoughts & Writings</h2>
+                    <div class="w-24 h-1 bg-[var(--accent)] rounded-full mb-6"></div>
+                    <p class="text-[var(--text-secondary)] max-w-xl">Sharing my journey and insights on development, AI, and more.</p>
+                </div>
+                <div id="blog-posts" class="grid grid-cols-1 md:grid-cols-3 gap-8 stagger">
+                    <!-- Skeletons -->
+                    <div class="blog-skeleton bg-[var(--bg-secondary)] rounded-2xl h-[400px] animate-pulse border border-[var(--border-glass)]"></div>
+                    <div class="blog-skeleton bg-[var(--bg-secondary)] rounded-2xl h-[400px] animate-pulse border border-[var(--border-glass)]"></div>
+                    <div class="blog-skeleton bg-[var(--bg-secondary)] rounded-2xl h-[400px] animate-pulse border border-[var(--border-glass)]"></div>
+                </div>
+            </section>
         </main>
-        <footer class="border-t border-white/10 bg-[var(--bg)]/60 backdrop-blur-sm">
+        <footer class="border-t border-white/10 bg-[var(--bg-primary)]/60 backdrop-blur-sm">
             <!-- Main Footer -->
             <div class="max-w-6xl mx-auto px-6 py-16 grid grid-cols-1 md:grid-cols-3 gap-12">
 
                 <!-- Col 1: Name, tagline, socials -->
                 <div class="flex flex-col gap-5">
                     <span class="font-stylish text-[var(--accent)] text-4xl tracking-normal">Rithwik Racharla</span>
-                    <p class="text-[var(--muted)] text-sm leading-relaxed max-w-xs">Full Stack Developer passionate about building intelligent systems with modern technologies. Always eager to learn and take on new challenges.</p>
+                    <p class="text-[var(--text-secondary)] text-sm leading-relaxed max-w-xs">Full Stack Developer passionate about building intelligent systems with modern technologies. Always eager to learn and take on new challenges.</p>
                     <div class="flex items-center gap-4 mt-1">
                         <!-- GitHub -->
-                        <a href="https://github.com/Rithwik007" target="_blank" class="text-[var(--muted)] hover:text-[var(--accent)] transition-colors" data-cursor="Github">
+                        <a href="https://github.com/Rithwik007" target="_blank" class="text-[var(--text-secondary)] hover:text-[var(--accent)] transition-colors" data-cursor="Github">
                             <svg class="size-5 fill-current" viewBox="0 0 24 24"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg>
                         </a>
                         <!-- LinkedIn -->
-                        <a href="https://www.linkedin.com/in/rithwik-racharla-488064211" target="_blank" class="text-[var(--muted)] hover:text-[var(--accent)] transition-colors" data-cursor="Linkedin">
+                        <a href="https://www.linkedin.com/in/rithwik-racharla-488064211" target="_blank" class="text-[var(--text-secondary)] hover:text-[var(--accent)] transition-colors" data-cursor="Linkedin">
                             <svg class="size-5 fill-current" viewBox="0 0 24 24"><path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/></svg>
                         </a>
                     </div>
@@ -437,22 +619,22 @@
 
                 <!-- Col 2: Quick Links -->
                 <div class="flex flex-col gap-5">
-                    <h5 class="font-display font-bold text-[var(--text)] text-lg">Quick Links</h5>
+                    <h5 class="font-display font-bold text-[var(--text-primary)] text-lg">Quick Links</h5>
                     <nav class="flex flex-col gap-3">
-                        <a href="#" class="text-[var(--muted)] text-sm hover:text-[var(--accent)] transition-colors" data-cursor="Link">Home</a>
-                        <a href="#" class="text-[var(--muted)] text-sm hover:text-[var(--accent)] transition-colors" data-cursor="Link">About</a>
-                        <a href="#projects" class="text-[var(--muted)] text-sm hover:text-[var(--accent)] transition-colors" data-cursor="Link">Projects</a>
-                        <a href="#skills" class="text-[var(--muted)] text-sm hover:text-[var(--accent)] transition-colors" data-cursor="Link">Skills</a>
-                        <a href="#contact-modal" class="text-[var(--muted)] text-sm hover:text-[var(--accent)] transition-colors" data-cursor="Link">Contact</a>
+                        <a href="#" class="text-[var(--text-secondary)] text-sm hover:text-[var(--accent)] transition-colors" data-cursor="Link">Home</a>
+                        <a href="#" class="text-[var(--text-secondary)] text-sm hover:text-[var(--accent)] transition-colors" data-cursor="Link">About</a>
+                        <a href="#projects" class="text-[var(--text-secondary)] text-sm hover:text-[var(--accent)] transition-colors" data-cursor="Link">Projects</a>
+                        <a href="#skills" class="text-[var(--text-secondary)] text-sm hover:text-[var(--accent)] transition-colors" data-cursor="Link">Skills</a>
+                        <a href="#contact-modal" class="text-[var(--text-secondary)] text-sm hover:text-[var(--accent)] transition-colors" data-cursor="Link">Contact</a>
                     </nav>
                 </div>
 
                 <!-- Col 3: Contact Info -->
                 <div class="flex flex-col gap-5">
-                    <h5 class="font-display font-bold text-[var(--text)] text-lg">Contact Info</h5>
+                    <h5 class="font-display font-bold text-[var(--text-primary)] text-lg">Contact Info</h5>
                     <div class="flex flex-col gap-4">
-                        <a href="mailto:rithwikracharla@gmail.com" class="text-[var(--muted)] text-sm hover:text-[var(--accent)] transition-colors" data-cursor="Mail">rithwikracharla@gmail.com</a>
-                        <div class="flex items-center gap-2 text-[var(--muted)] text-sm">
+                        <a href="mailto:rithwikracharla@gmail.com" class="text-[var(--text-secondary)] text-sm hover:text-[var(--accent)] transition-colors" data-cursor="Mail">rithwikracharla@gmail.com</a>
+                        <div class="flex items-center gap-2 text-[var(--text-secondary)] text-sm">
                             <span class="material-symbols-outlined text-base text-[var(--accent)]">location_on</span>
                             Hyderabad, India
                         </div>
@@ -462,12 +644,406 @@
             </div>
             <!-- Bottom Bar -->
             <div class="border-t border-white/5 px-6 py-5">
-                <p class="text-center text-xs text-[var(--muted)]">© 2025 Rithwik Racharla. All rights reserved.</p>
+                <p class="text-center text-xs text-[var(--text-secondary)]">© 2026 Rithwik Racharla. All rights reserved.</p>
             </div>
         </footer>
     </div>
 
-    <!-- FEATURE 2: SCROLL EXPERIENCE (PARALLAX + REVEAL) -->
+    <!-- Case Study Overlay -->
+    <div id="case-study-overlay" class="case-study-overlay" role="dialog" aria-modal="true">
+        <button id="close-case-study" class="absolute top-8 right-8 text-[var(--text-secondary)] hover:text-[var(--accent)] transition-colors z-[1001]" aria-label="Close Case Study">
+            <span class="material-symbols-outlined text-4xl">close</span>
+        </button>
+        <div class="case-study-content pb-20">
+            <div id="case-study-body">
+                <!-- Content will be injected via JS -->
+            </div>
+        </div>
+    </div>
+
+    <!-- FEATURE 5: AI CHATBOT -->
+    <div class="fixed bottom-6 right-6 z-[999]">
+        <button id="chatbot-toggle" class="size-14 bg-[var(--accent)] text-[var(--bg-primary)] rounded-full flex items-center justify-center shadow-lg hover:scale-110 transition-all neon-glow" aria-label="Ask Rithwik">
+            <span class="material-symbols-outlined text-3xl">chat</span>
+        </button>
+        
+        <div id="chatbot-panel" class="absolute bottom-20 right-0 w-[360px] max-w-[calc(100vw-40px)] h-[480px] glass rounded-3xl overflow-hidden flex flex-col shadow-2xl opacity-0 translate-y-10 pointer-events-none transition-all duration-300">
+            <div class="p-4 bg-[var(--accent)]/10 border-b border-[var(--border-glass)] flex items-center justify-between">
+                <div>
+                    <h3 class="font-display font-bold text-[var(--text-primary)]">Ask Rithwik</h3>
+                    <p class="text-[var(--text-secondary)] text-[10px] uppercase tracking-widest font-bold">Powered by Claude AI</p>
+                </div>
+                <button id="close-chatbot" class="text-[var(--text-secondary)] hover:text-[var(--accent)] transition-colors">
+                    <span class="material-symbols-outlined">close</span>
+                </button>
+            </div>
+            
+            <div id="chat-messages" class="flex-1 overflow-y-auto p-4 space-y-4 scrollbar-hide">
+                <!-- Messages will be injected here -->
+            </div>
+            
+            <div class="p-4 border-t border-[var(--border-glass)] bg-[var(--bg-secondary)]/50">
+                <div class="flex gap-2">
+                    <input type="text" id="chat-input" placeholder="Ask me something..." class="flex-1 bg-[var(--bg-primary)] border border-[var(--border-glass)] rounded-xl px-4 py-2 text-sm focus:outline-none focus:border-[var(--accent)] text-[var(--text-primary)]" />
+                    <button id="send-chat" class="bg-[var(--accent)] text-[var(--bg-primary)] p-2 rounded-xl hover:scale-105 transition-all">
+                        <span class="material-symbols-outlined">send</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- FEATURE 3 & 4 & 5 LOGIC -->
+    <script>
+        (function() {
+            // --- CASE STUDIES ---
+            const caseStudyData = {
+                'habit-tracker': {
+                    name: 'Habit Mastery',
+                    tech: ['React 19', 'Vite', 'Node.js', 'MongoDB', 'Firebase'],
+                    problem: 'Bridging the gap between simple checklists and comprehensive dashboards with a "visually stunning" and "psychologically engaging" platform that makes daily discipline feel premium.',
+                    role: 'Full-Stack Architect leading the migration to a custom Node/Express backend; UI/UX Engineer developing the "Premium Glassmorphic" design system; Backend Developer engineering the node-cron notification scheduler.',
+                    techDecisions: [
+                        { tech: 'Node.js/Express', why: 'Support complex cron jobs and notification logic', alt: 'Supabase Edge Functions' },
+                        { tech: 'MongoDB', why: 'Handle nested, flexible notification settings and device tokens', alt: 'PostgreSQL' },
+                        { tech: 'React 19', why: 'Optimized hooks for real-time header and chart rendering', alt: 'Older React versions' }
+                    ],
+                    challenges: [
+                        'Developed a Logic Guard in the NotificationContext to prevent nagging loops and duplicate notifications.',
+                        'Authored a custom migration script to map relational habit data from Supabase to MongoDB while preserving user streaks.',
+                        'Utilized optimized React 19 hooks and memoization to decouple weather/time updates from heavy chart rendering.'
+                    ],
+                    results: { users: 'V2.0 Active', performance: 'Sub-second', win: 'Nagging Engine' },
+                    reflection: 'Integrate more advanced machine learning to predict habit burnout before it happens and automate the "Nagging" intensity based on user behavior patterns.'
+                },
+                'library-mgmt': {
+                    name: 'VNR Departmental Library Management System',
+                    tech: ['Node.js', 'Express', 'MongoDB', 'Vanilla JS', 'JWT'],
+                    problem: 'A robust, full-stack web application designed to digitize and streamline the operations of a departmental library, providing a platform for resource tracking and user transactions.',
+                    role: 'System Architect designing scalable MongoDB schemas; Backend Developer creating 40+ REST API endpoints; UI/UX Developer crafting responsive role-specific dashboards; Security Engineer implementing RBAC.',
+                    techDecisions: [
+                        { tech: 'Vanilla JS', why: 'Lightweight performance and mastery of DOM manipulation without frameworks', alt: 'React/Vue' },
+                        { tech: 'MongoDB $inc', why: 'Ensured atomic updates for book stock to prevent concurrency issues', alt: 'Manual decrementing' },
+                        { tech: 'JWT', why: 'Secure, stateless authentication for role-based access control', alt: 'Session-based' }
+                    ],
+                    challenges: [
+                        'Implemented custom Express middleware to enforce strict role-based access for students and faculty.',
+                        'Standardized IST (Indian Standard Time) logic using Intl.DateTimeFormat for accurate fine calculation.',
+                        'Leveraged the Fetch API and dynamic DOM injection to maintain a Single Page feel in a Vanilla environment.'
+                    ],
+                    results: { users: '1000+ Items', performance: '70% Faster', win: 'RBAC Security' },
+                    reflection: 'Transition to a modern React/Next.js frontend for even smoother state management and explore RFID integration for fully automated physical book tracking.'
+                }
+            };
+
+            const caseStudyOverlay = document.getElementById('case-study-overlay');
+            const caseStudyBody = document.getElementById('case-study-body');
+            const closeCaseStudy = document.getElementById('close-case-study');
+
+            function openCaseStudy(projectId) {
+                const data = caseStudyData[projectId];
+                if (!data) return;
+
+                caseStudyBody.innerHTML = `
+                    <h1 class="font-display text-5xl font-black mb-6">${data.name}</h1>
+                    <div class="flex flex-wrap gap-2 mb-12">
+                        ${data.tech.map(t => `<span class="bg-[var(--accent)]/10 border border-[var(--accent)]/30 text-[var(--accent)] px-3 py-1 rounded-full text-xs font-bold">${t}</span>`).join('')}
+                    </div>
+
+                    <section class="mb-12">
+                        <h2 class="text-2xl font-bold mb-4 flex items-center gap-2">
+                            <span class="material-symbols-outlined text-[var(--accent)]">problem</span> The Problem
+                        </h2>
+                        <div class="placeholder-box">${data.problem}</div>
+                    </section>
+
+                    <section class="mb-12">
+                        <h2 class="text-2xl font-bold mb-4 flex items-center gap-2">
+                            <span class="material-symbols-outlined text-[var(--accent)]">person</span> My Role
+                        </h2>
+                        <div class="placeholder-box">${data.role}</div>
+                    </section>
+
+                    <section class="mb-12">
+                        <h2 class="text-2xl font-bold mb-4 flex items-center gap-2">
+                            <span class="material-symbols-outlined text-[var(--accent)]">settings</span> Tech Decisions & Why
+                        </h2>
+                        <div class="overflow-x-auto">
+                            <table class="w-full text-left border-collapse">
+                                <thead>
+                                    <tr class="border-b border-[var(--border-glass)]">
+                                        <th class="py-4 font-bold text-[var(--text-secondary)]">Technology</th>
+                                        <th class="py-4 font-bold text-[var(--text-secondary)]">Why chosen</th>
+                                        <th class="py-4 font-bold text-[var(--text-secondary)]">Alternative</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    ${data.techDecisions.map(d => `
+                                        <tr class="border-b border-[var(--border-glass)]/50">
+                                            <td class="py-4 font-bold">${d.tech}</td>
+                                            <td class="py-4 text-[var(--text-secondary)]">${d.why}</td>
+                                            <td class="py-4 text-[var(--text-secondary)] italic">${d.alt}</td>
+                                        </tr>
+                                    `).join('')}
+                                </tbody>
+                            </table>
+                        </div>
+                    </section>
+
+                    <section class="mb-12">
+                        <h2 class="text-2xl font-bold mb-4 flex items-center gap-2">
+                            <span class="material-symbols-outlined text-[var(--accent)]">warning</span> Challenges Faced
+                        </h2>
+                        <ul class="space-y-3 list-decimal list-inside text-[var(--text-secondary)]">
+                            ${data.challenges.map(c => `<li>${c}</li>`).join('')}
+                        </ul>
+                    </section>
+
+                    <section class="mb-12">
+                        <h2 class="text-2xl font-bold mb-4 flex items-center gap-2">
+                            <span class="material-symbols-outlined text-[var(--accent)]">architecture</span> Solution & Architecture
+                        </h2>
+                        <div class="placeholder-box h-64 flex items-center justify-center">
+                            [TODO: Add architecture diagram here]
+                        </div>
+                    </section>
+
+                    <section class="mb-12">
+                        <h2 class="text-2xl font-bold mb-4 flex items-center gap-2">
+                            <span class="material-symbols-outlined text-[var(--accent)]">trending_up</span> Results & Impact
+                        </h2>
+                        <div class="metric-grid">
+                            <div class="metric-card">
+                                <p class="text-[var(--accent)] text-2xl font-black">${data.results.users}</p>
+                                <p class="text-xs text-[var(--text-secondary)] uppercase font-bold tracking-widest mt-1">Users</p>
+                            </div>
+                            <div class="metric-card">
+                                <p class="text-[var(--accent)] text-2xl font-black">${data.results.performance}</p>
+                                <p class="text-xs text-[var(--text-secondary)] uppercase font-bold tracking-widest mt-1">Performance</p>
+                            </div>
+                            <div class="metric-card">
+                                <p class="text-[var(--accent)] text-2xl font-black">${data.results.win}</p>
+                                <p class="text-xs text-[var(--text-secondary)] uppercase font-bold tracking-widest mt-1">Key Win</p>
+                            </div>
+                        </div>
+                    </section>
+
+                    <section class="mb-12">
+                        <h2 class="text-2xl font-bold mb-4 flex items-center gap-2">
+                            <span class="material-symbols-outlined text-[var(--accent)]">lightbulb</span> What I'd Do Differently
+                        </h2>
+                        <div class="placeholder-box">${data.reflection}</div>
+                    </section>
+                `;
+
+                caseStudyOverlay.classList.add('active');
+                document.body.classList.add('no-scroll');
+            }
+
+            document.querySelectorAll('.open-case-study').forEach(link => {
+                link.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    openCaseStudy(link.getAttribute('data-project'));
+                });
+            });
+
+            closeCaseStudy.addEventListener('click', () => {
+                caseStudyOverlay.classList.remove('active');
+                document.body.classList.remove('no-scroll');
+            });
+
+            window.addEventListener('keydown', (e) => {
+                if (e.key === 'Escape' && caseStudyOverlay.classList.contains('active')) {
+                    caseStudyOverlay.classList.remove('active');
+                    document.body.classList.remove('no-scroll');
+                }
+            });
+
+            // --- BLOG FEED ---
+            const blogPostsContainer = document.getElementById('blog-posts');
+
+            function renderStaticBlogPosts() {
+                const articles = [
+                    {
+                        title: "Building the Premium Glassmorphic Portfolio",
+                        description: "Deep dive into the design choices behind a modern, futuristic developer portfolio.",
+                        url: "#",
+                        readable_publish_date: "Apr 28",
+                        reading_time_minutes: 5,
+                        tag_list: ["webdev", "uiux", "glassmorphism"],
+                        cover_image: "https://images.unsplash.com/photo-1614850523296-d8c1af93d400?auto=format&fit=crop&q=80&w=800"
+                    },
+                    {
+                        title: "The Future of Productivity: AI-Powered Habit Tracking",
+                        description: "How Agentic AI and real-time data are changing the way we maintain discipline.",
+                        url: "#",
+                        readable_publish_date: "Apr 20",
+                        reading_time_minutes: 8,
+                        tag_list: ["ai", "productivity", "habit-mastery"],
+                        cover_image: "https://images.unsplash.com/photo-1484480974693-6ca0a78fb36b?auto=format&fit=crop&q=80&w=800"
+                    },
+                    {
+                        title: "Mastering Vanilla JS in a Framework-Heavy World",
+                        description: "Why learning the fundamentals of the DOM and Web APIs is still the best investment.",
+                        url: "#",
+                        readable_publish_date: "Apr 12",
+                        reading_time_minutes: 6,
+                        tag_list: ["javascript", "fundamentals", "webdev"],
+                        cover_image: "https://images.unsplash.com/photo-1550439062-609e1531270e?auto=format&fit=crop&q=80&w=800"
+                    }
+                ];
+
+                blogPostsContainer.innerHTML = articles.map(article => `
+                    <a href="${article.url}" class="glass group rounded-2xl overflow-hidden hover:border-[var(--accent)]/40 transition-all hover:-translate-y-2 flex flex-col h-full">
+                        <div class="aspect-video overflow-hidden bg-slate-900">
+                            <img src="${article.cover_image}" alt="${article.title}" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" />
+                        </div>
+                        <div class="p-6 flex flex-col flex-1">
+                            <div class="flex flex-wrap gap-2 mb-4">
+                                ${article.tag_list.map(tag => `<span class="text-[var(--accent)] text-[10px] font-bold uppercase tracking-widest bg-[var(--accent)]/10 px-2 py-0.5 rounded">#${tag}</span>`).join('')}
+                            </div>
+                            <h3 class="text-xl font-bold text-[var(--text-primary)] mb-3 line-clamp-2 group-hover:text-[var(--accent)] transition-colors">${article.title}</h3>
+                            <p class="text-[var(--text-secondary)] text-sm mb-4 line-clamp-2">${article.description}</p>
+                            <div class="mt-auto flex items-center justify-between text-[var(--text-secondary)] text-xs font-medium">
+                                <span>${article.readable_publish_date}</span>
+                                <span>${article.reading_time_minutes} min read</span>
+                            </div>
+                            <div class="mt-4 pt-4 border-t border-[var(--border-glass)] flex items-center text-[var(--accent)] font-bold text-sm">
+                                Read More <span class="material-symbols-outlined text-sm ml-1">east</span>
+                            </div>
+                        </div>
+                    </a>
+                `).join('');
+            }
+
+            renderStaticBlogPosts();
+
+            // --- AI CHATBOT ---
+            const ANTHROPIC_API_KEY = "REPLACE_WITH_YOUR_KEY"; // TODO: Add your API key here
+            const SYSTEM_PROMPT = `You are Rithwik Racharla, a Computer Science undergrad at VNR VJIET, Hyderabad, India. You speak in first person, casually but confidently. You are passionate about Agentic AI, full-stack development, DSA, and Java. You answer questions about your background, projects, skills, and availability.
+
+Key facts about you:
+- Name: Rithwik Racharla
+- College: VNR VJIET, Hyderabad
+- Skills: Java, Node.js, Express, MongoDB, React.js, HTML/CSS, Docker, AWS, Git
+- Projects: Habit Tracker (React + Supabase, glassmorphic UI), Library Management System (Node.js, role-based access)
+- Email: rithwikracharla@gmail.com
+- LinkedIn: https://www.linkedin.com/in/rithwik-racharla-488064211
+- GitHub: https://github.com/Rithwik007
+- Currently: Available for internships and full-time roles
+- Interests: Agentic AI systems, building intelligent products, DSA problem solving
+
+Rules:
+- Always speak as Rithwik (use "I", "my", "me")
+- Be concise — 2-4 sentences max per reply
+- If asked something you don't know, say "That's something you'd have to ask me directly — reach out at rithwikracharla@gmail.com"
+- Never make up projects or experiences not listed above
+- Keep tone: friendly, sharp, slightly enthusiastic about tech`;
+
+            const chatbotToggle = document.getElementById('chatbot-toggle');
+            const chatbotPanel = document.getElementById('chatbot-panel');
+            const closeChatbot = document.getElementById('close-chatbot');
+            const chatMessages = document.getElementById('chat-messages');
+            const chatInput = document.getElementById('chat-input');
+            const sendChat = document.getElementById('send-chat');
+
+            let conversationHistory = [];
+            let isChatOpen = false;
+
+            function toggleChat() {
+                isChatOpen = !isChatOpen;
+                if (isChatOpen) {
+                    chatbotPanel.classList.remove('opacity-0', 'translate-y-10', 'pointer-events-none');
+                    if (conversationHistory.length === 0) {
+                        addMessage("Hey! I'm Rithwik. Ask me anything — my projects, skills, or if I'm open to work 👋", 'bot');
+                    }
+                } else {
+                    chatbotPanel.classList.add('opacity-0', 'translate-y-10', 'pointer-events-none');
+                }
+            }
+
+            chatbotToggle.addEventListener('click', toggleChat);
+            closeChatbot.addEventListener('click', toggleChat);
+
+            function addMessage(text, sender) {
+                const msgDiv = document.createElement('div');
+                msgDiv.className = `flex ${sender === 'user' ? 'justify-end' : 'justify-start'}`;
+                
+                const bubble = document.createElement('div');
+                bubble.className = `max-w-[80%] p-3 rounded-2xl text-sm ${
+                    sender === 'user' 
+                    ? 'bg-[var(--accent)] text-[var(--bg-primary)] rounded-tr-none shadow-lg' 
+                    : 'glass border border-[var(--border-glass)] text-[var(--text-primary)] rounded-tl-none'
+                }`;
+                bubble.textContent = text;
+                
+                msgDiv.appendChild(bubble);
+                chatMessages.appendChild(msgDiv);
+                chatMessages.scrollTop = chatMessages.scrollHeight;
+                
+                conversationHistory.push({ role: sender === 'user' ? 'user' : 'assistant', content: text });
+                if (conversationHistory.length > 10) conversationHistory.shift();
+            }
+
+            async function handleSendMessage() {
+                const text = chatInput.value.trim();
+                if (!text) return;
+
+                addMessage(text, 'user');
+                chatInput.value = '';
+
+                // Typing animation
+                const typingDiv = document.createElement('div');
+                typingDiv.className = 'flex justify-start';
+                typingDiv.innerHTML = `<div class="glass border border-[var(--border-glass)] p-3 rounded-2xl rounded-tl-none flex gap-1 items-center">
+                    <span class="w-1.5 h-1.5 bg-[var(--accent)] rounded-full animate-bounce"></span>
+                    <span class="w-1.5 h-1.5 bg-[var(--accent)] rounded-full animate-bounce" style="animation-delay: 0.2s"></span>
+                    <span class="w-1.5 h-1.5 bg-[var(--accent)] rounded-full animate-bounce" style="animation-delay: 0.4s"></span>
+                </div>`;
+                chatMessages.appendChild(typingDiv);
+                chatMessages.scrollTop = chatMessages.scrollHeight;
+
+                try {
+                    const response = await fetch("https://api.anthropic.com/v1/messages", {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json",
+                            "x-api-key": ANTHROPIC_API_KEY,
+                            "anthropic-version": "2023-06-01",
+                            "anthropic-dangerous-direct-browser-access": "true"
+                        },
+                        body: JSON.stringify({
+                            model: "claude-3-5-sonnet-20240620",
+                            max_tokens: 300,
+                            system: SYSTEM_PROMPT,
+                            messages: conversationHistory.filter(m => m.role !== 'system')
+                        })
+                    });
+
+                    const data = await response.json();
+                    chatMessages.removeChild(typingDiv);
+
+                    if (data.content && data.content[0]) {
+                        addMessage(data.content[0].text, 'bot');
+                    } else {
+                        throw new Error("Invalid response");
+                    }
+                } catch (error) {
+                    console.error("Chatbot error:", error);
+                    chatMessages.removeChild(typingDiv);
+                    addMessage("Hmm, looks like I'm offline. Email me directly: rithwikracharla@gmail.com", 'bot');
+                }
+            }
+
+            sendChat.addEventListener('click', handleSendMessage);
+            chatInput.addEventListener('keydown', (e) => {
+                if (e.key === 'Enter' && !e.shiftKey) {
+                    e.preventDefault();
+                    handleSendMessage();
+                }
+            });
+        })();
+    </script>
     <script>
         (function() {
             // Parallax
@@ -641,8 +1217,30 @@
 
     <script>
         (function() {
-            // Force dark class on load
-            document.documentElement.classList.add('dark');
+            const themeToggleBtn = document.getElementById('theme-toggle');
+            const darkIcon = document.getElementById('theme-toggle-dark-icon');
+            const lightIcon = document.getElementById('theme-toggle-light-icon');
+
+            function updateIcons(theme) {
+                if (theme === 'dark') {
+                    darkIcon.classList.remove('hidden');
+                    lightIcon.classList.add('hidden');
+                } else {
+                    darkIcon.classList.add('hidden');
+                    lightIcon.classList.remove('hidden');
+                }
+            }
+
+            let currentTheme = localStorage.getItem('theme') || 'dark';
+            updateIcons(currentTheme);
+
+            themeToggleBtn.addEventListener('click', () => {
+                currentTheme = currentTheme === 'dark' ? 'light' : 'dark';
+                document.documentElement.setAttribute('data-theme', currentTheme);
+                document.documentElement.classList.toggle('dark', currentTheme === 'dark');
+                localStorage.setItem('theme', currentTheme);
+                updateIcons(currentTheme);
+            });
         })();
     </script>
 </body>
