@@ -30,6 +30,7 @@ app.post('/api/chat', async (req, res) => {
     const { messages, systemPrompt } = req.body;
 
     try {
+        console.log(`Sending query to Anthropic with ${messages.length} messages...`);
         const response = await axios.post('https://api.anthropic.com/v1/messages', {
             model: "claude-3-5-sonnet-20240620",
             max_tokens: 1024,
@@ -40,8 +41,10 @@ app.post('/api/chat', async (req, res) => {
                 'Content-Type': 'application/json',
                 'x-api-key': process.env.ANTHROPIC_API_KEY,
                 'anthropic-version': '2023-06-01'
-            }
+            },
+            timeout: 15000
         });
+        console.log("Received response from Anthropic");
 
         res.json(response.data);
     } catch (error) {

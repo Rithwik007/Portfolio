@@ -351,8 +351,6 @@
                     <a class="text-sm font-medium hover:text-primary transition-colors text-white"
                         href="#projects" data-cursor="→">Projects</a>
                     <a class="text-sm font-medium hover:text-primary transition-colors text-white"
-                        href="#blog" data-cursor="→">Blog</a>
-                    <a class="text-sm font-medium hover:text-primary transition-colors text-white"
                         href="#contact-modal" data-cursor="→">Contact</a>
                 </div>
                 <div class="flex items-center gap-4">
@@ -588,7 +586,7 @@
                                         <svg class="size-4 fill-current" viewBox="0 0 24 24"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg>
                                         Code
                                     </a>
-                                    <a href="#" data-demo-url="https://github.com/Rithwik007" target="_blank" rel="noopener"
+                                    <a href="https://library-management-frontend-ten-tan.vercel.app/" target="_blank" rel="noopener"
                                         class="flex-1 flex items-center justify-center gap-2 bg-[var(--accent)] text-[var(--bg-primary)] font-bold py-2.5 rounded-xl text-sm transition-all hover:scale-[1.03] neon-glow">
                                         Live Demo <span>↗</span>
                                     </a>
@@ -617,20 +615,6 @@
                         </a>
                     </div>
 
-                </div>
-            </section>
-            <!-- Blog Section -->
-            <section class="max-w-6xl mx-auto px-6 py-24 w-full reveal" id="blog">
-                <div class="flex flex-col items-center mb-16 text-center reveal">
-                    <h2 class="font-display text-4xl md:text-5xl font-black text-[var(--text-primary)] mb-4">Thoughts & Writings</h2>
-                    <div class="w-24 h-1 bg-[var(--accent)] rounded-full mb-6"></div>
-                    <p class="text-[var(--text-secondary)] max-w-xl">Sharing my journey and insights on development, AI, and more.</p>
-                </div>
-                <div id="blog-posts" class="grid grid-cols-1 md:grid-cols-3 gap-8 stagger">
-                    <!-- Skeletons -->
-                    <div class="blog-skeleton bg-[var(--bg-secondary)] rounded-2xl h-[400px] animate-pulse border border-[var(--border-glass)]"></div>
-                    <div class="blog-skeleton bg-[var(--bg-secondary)] rounded-2xl h-[400px] animate-pulse border border-[var(--border-glass)]"></div>
-                    <div class="blog-skeleton bg-[var(--bg-secondary)] rounded-2xl h-[400px] animate-pulse border border-[var(--border-glass)]"></div>
                 </div>
             </section>
         </main>
@@ -924,122 +908,8 @@
                 el.addEventListener('mouseleave', () => outline.classList.remove('cursor-active'));
             });
 
-            // --- BLOG FEED ---
-            const blogPostsContainer = document.getElementById('blog-posts');
-            const blogOverlay = document.getElementById('blog-overlay');
-            const blogContentBody = document.getElementById('blog-content-body');
-            const closeBlog = document.getElementById('close-blog');
-
-            function renderStaticBlogPosts() {
-                const articles = [
-                    {
-                        id: 'glass-portfolio',
-                        title: "Building the Premium Glassmorphic Portfolio",
-                        description: "Deep dive into the design choices behind a modern, futuristic developer portfolio.",
-                        content: `
-                            <div class="prose prose-invert max-w-none">
-                                <h1 class="text-4xl font-black mb-6">Building the Premium Glassmorphic Portfolio</h1>
-                                <img src="https://images.unsplash.com/photo-1614850523296-d8c1af93d400?auto=format&fit=crop&q=80&w=800" class="w-full h-64 object-cover rounded-2xl mb-8" />
-                                <p class="text-lg text-[var(--text-secondary)] mb-6">Glassmorphism isn't just a trend; it's a way to create depth and hierarchy in a digital space that often feels flat. By using backdrop filters, subtle borders, and layered transparency, we can build interfaces that feel premium and tactile.</p>
-                                <h3 class="text-2xl font-bold mb-4">The Design System</h3>
-                                <p class="mb-6">The core of this portfolio relies on a strict color palette and consistent spacing. We use CSS variables to handle theming, allowing for a seamless transition between Dark and Light modes without losing the "glassy" effect.</p>
-                                <div class="bg-[var(--accent)]/10 p-6 rounded-2xl border border-[var(--accent)]/20 mb-6">
-                                    <h4 class="font-bold text-[var(--accent)] mb-2">Pro Tip</h4>
-                                    <p class="text-sm italic">Always use a slightly tinted border (matching your accent color) for glass cards. It helps the elements pop against complex backgrounds.</p>
-                                </div>
-                                <p>In this project, we used Tailwind CSS for layout utility but kept the heavy lifting in Vanilla CSS to ensure maximum performance and control over the glass effects.</p>
-                            </div>
-                        `,
-                        url: "#",
-                        readable_publish_date: "Apr 28",
-                        reading_time_minutes: 5,
-                        tag_list: ["webdev", "uiux", "glassmorphism"],
-                        cover_image: "https://images.unsplash.com/photo-1614850523296-d8c1af93d400?auto=format&fit=crop&q=80&w=800"
-                    },
-                    {
-                        id: 'habit-tracking-ai',
-                        title: "The Future of Productivity: AI-Powered Habit Tracking",
-                        description: "How Agentic AI and real-time data are changing the way we maintain discipline.",
-                        content: `
-                            <div class="prose prose-invert max-w-none">
-                                <h1 class="text-4xl font-black mb-6">AI-Powered Habit Tracking</h1>
-                                <img src="https://images.unsplash.com/photo-1484480974693-6ca0a78fb36b?auto=format&fit=crop&q=80&w=800" class="w-full h-64 object-cover rounded-2xl mb-8" />
-                                <p class="text-lg text-[var(--text-secondary)] mb-6">Traditional habit trackers rely on user manual input. But what if your tracker knew you were struggling before you did? That's where Agentic AI comes in.</p>
-                                <h3 class="text-2xl font-bold mb-4">Beyond Checkboxes</h3>
-                                <p class="mb-6">By integrating LLMs like Claude or GPT-4, we can analyze patterns in consistency. If a user misses their "Morning Run" three days in a row when it's raining, the AI can suggest shifting the habit to an indoor activity or adjusting the time based on weather forecasts.</p>
-                                <p>The "Nagging Engine" I built uses a logic guard to ensure reminders are persistent enough to be effective but intelligent enough not to become spam.</p>
-                            </div>
-                        `,
-                        url: "#",
-                        readable_publish_date: "Apr 20",
-                        reading_time_minutes: 8,
-                        tag_list: ["ai", "productivity", "habit-mastery"],
-                        cover_image: "https://images.unsplash.com/photo-1484480974693-6ca0a78fb36b?auto=format&fit=crop&q=80&w=800"
-                    },
-                    {
-                        id: 'vanilla-js-mastery',
-                        title: "Mastering Vanilla JS in a Framework-Heavy World",
-                        description: "Why learning the fundamentals of the DOM and Web APIs is still the best investment.",
-                        content: `
-                            <div class="prose prose-invert max-w-none">
-                                <h1 class="text-4xl font-black mb-6">Mastering Vanilla JS</h1>
-                                <img src="https://images.unsplash.com/photo-1550439062-609e1531270e?auto=format&fit=crop&q=80&w=800" class="w-full h-64 object-cover rounded-2xl mb-8" />
-                                <p class="text-lg text-[var(--text-secondary)] mb-6">Frameworks come and go, but the DOM is forever. Understanding how JavaScript interacts with the browser at a fundamental level is the ultimate superpower for a web developer.</p>
-                                <h3 class="text-2xl font-bold mb-4">Why Vanilla?</h3>
-                                <p class="mb-6">Performance is the obvious answer. But the real value lies in debugging. When you know how an event listener works under the hood, you can solve problems in React or Vue much faster.</p>
-                                <p>This portfolio itself is a testament to Vanilla JS. Every animation, modal, and custom cursor is powered by native Web APIs, keeping the bundle size microscopic and the interactions buttery smooth.</p>
-                            </div>
-                        `,
-                        url: "#",
-                        readable_publish_date: "Apr 12",
-                        reading_time_minutes: 6,
-                        tag_list: ["javascript", "fundamentals", "webdev"],
-                        cover_image: "https://images.unsplash.com/photo-1550439062-609e1531270e?auto=format&fit=crop&q=80&w=800"
-                    }
-                ];
-
-                blogPostsContainer.innerHTML = articles.map(article => `
-                    <div class="glass group rounded-2xl overflow-hidden hover:border-[var(--accent)]/40 transition-all hover:-translate-y-2 flex flex-col h-full cursor-pointer open-blog" data-article-id="${article.id}">
-                        <div class="aspect-video overflow-hidden bg-slate-900">
-                            <img src="${article.cover_image}" alt="${article.title}" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" />
-                        </div>
-                        <div class="p-6 flex flex-col flex-1">
-                            <div class="flex flex-wrap gap-2 mb-4">
-                                ${article.tag_list.map(tag => `<span class="text-[var(--accent)] text-[10px] font-bold uppercase tracking-widest bg-[var(--accent)]/10 px-2 py-0.5 rounded">#${tag}</span>`).join('')}
-                            </div>
-                            <h3 class="text-xl font-bold text-[var(--text-primary)] mb-3 line-clamp-2 group-hover:text-[var(--accent)] transition-colors">${article.title}</h3>
-                            <p class="text-[var(--text-secondary)] text-sm mb-4 line-clamp-2">${article.description}</p>
-                            <div class="mt-auto flex items-center justify-between text-[var(--text-secondary)] text-xs font-medium">
-                                <span>${article.readable_publish_date}</span>
-                                <span>${article.reading_time_minutes} min read</span>
-                            </div>
-                            <button class="mt-4 pt-4 border-t border-[var(--border-glass)] flex items-center text-[var(--accent)] font-bold text-sm">
-                                Read More <span class="material-symbols-outlined text-sm ml-1">east</span>
-                            </button>
-                        </div>
-                    </div>
-                `).join('');
-
-                document.querySelectorAll('.open-blog').forEach(card => {
-                    card.addEventListener('click', () => {
-                        const id = card.getAttribute('data-article-id');
-                        const article = articles.find(a => a.id === id);
-                        if (article) {
-                            blogContentBody.innerHTML = article.content;
-                            blogOverlay.classList.add('active');
-                            document.body.classList.add('no-scroll');
-                        }
-                    });
-                });
-            }
-
-            closeBlog.addEventListener('click', () => {
-                blogOverlay.classList.remove('active');
-                document.body.classList.remove('no-scroll');
-            });
-
-            renderStaticBlogPosts();
-
+            // --- BLOG FEED (REMOVED) ---
+            
             // --- AI CHATBOT ---
 
             const SYSTEM_PROMPT = `You are Rithwik Racharla, a Computer Science undergrad at VNR VJIET, Hyderabad, India. You speak in first person, casually but confidently. You are passionate about Agentic AI, full-stack development, DSA, and Java. You answer questions about your background, projects, skills, and availability.
@@ -1158,7 +1028,7 @@ Rules:
                         caseStudyOverlay.classList.remove('active');
                         document.body.classList.remove('no-scroll');
                     }
-                    if (blogOverlay.classList.contains('active')) {
+                    if (blogOverlay && blogOverlay.classList.contains('active')) {
                         blogOverlay.classList.remove('active');
                         document.body.classList.remove('no-scroll');
                     }
