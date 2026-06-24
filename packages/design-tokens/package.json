@@ -1,0 +1,17 @@
+{
+  "name": "@portfolio/design-tokens",
+  "version": "1.0.0",
+  "main": "src/tailwind-preset.ts",
+  "types": "src/tailwind-preset.ts",
+  "scripts": {
+    "build": "echo 'Design tokens package - no build step needed'",
+    "lint": "echo 'No lint configured'"
+  },
+  "peerDependencies": {
+    "tailwindcss": ">=3.4.0"
+  },
+  "devDependencies": {
+    "tailwindcss": "^3.4.0",
+    "typescript": "^5.5.0"
+  }
+}

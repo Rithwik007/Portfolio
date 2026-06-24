@@ -1,0 +1,81 @@
+@import '@portfolio/design-tokens/src/css-vars.css';
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 0 0% 3%;
+    --foreground: 0 0% 98%;
+    --card: 0 0% 3%;
+    --card-foreground: 0 0% 98%;
+    --popover: 0 0% 3%;
+    --popover-foreground: 0 0% 98%;
+    --primary: 217 91% 60%;
+    --primary-foreground: 0 0% 3%;
+    --secondary: 0 0% 14.9%;
+    --secondary-foreground: 0 0% 98%;
+    --muted: 0 0% 14.9%;
+    --muted-foreground: 0 0% 63.9%;
+    --accent: 0 0% 14.9%;
+    --accent-foreground: 0 0% 98%;
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 0 0% 14.9%;
+    --input: 0 0% 14.9%;
+    --ring: 217 91% 60%;
+    --radius: 0.5rem;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
+    font-family: var(--body);
+    cursor: none;
+    overflow-x: hidden;
+  }
+  html {
+    scroll-behavior: smooth;
+  }
+}
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+  .animate-delay-100 {
+    animation-delay: 100ms;
+  }
+  .animate-delay-200 {
+    animation-delay: 200ms;
+  }
+  .animate-delay-300 {
+    animation-delay: 300ms;
+  }
+  .animate-delay-500 {
+    animation-delay: 500ms;
+  }
+}
+
+#cursor-dot {
+  @apply fixed pointer-events-none z-[9998] w-1.5 h-1.5 rounded-full bg-blue transition-opacity duration-150;
+  transform: translate(-50%, -50%);
+}
+
+#cursor-ring {
+  @apply fixed pointer-events-none z-[9997] w-10 h-10 rounded-full border border-blue/50 transition-all duration-300;
+  transform: translate(-50%, -50%);
+}
+
+.bg-orb {
+  @apply fixed rounded-full blur-[140px] pointer-events-none z-0;
+}
+
+.scroll-progress {
+  @apply fixed top-0 left-0 h-0.5 bg-gradient-to-r from-blue to-violet z-[9999] origin-left;
+  transform: scaleX(0);
+}

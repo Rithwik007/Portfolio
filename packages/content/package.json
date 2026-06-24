@@ -1,0 +1,17 @@
+{
+  "name": "@portfolio/content",
+  "version": "1.0.0",
+  "main": "src/index.ts",
+  "types": "src/index.ts",
+  "scripts": {
+    "build": "echo 'Content package - no build step needed'",
+    "lint": "echo 'No lint configured'"
+  },
+  "peerDependencies": {
+    "zod": ">=3.23.0"
+  },
+  "devDependencies": {
+    "zod": "^3.23.0",
+    "typescript": "^5.5.0"
+  }
+}

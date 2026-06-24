@@ -1,0 +1,34 @@
+:root {
+  --bg: #030305;
+  --bg-1: #08080f;
+  --bg-2: #0d0d1a;
+  --surface: rgba(255, 255, 255, 0.035);
+  --surface-h: rgba(255, 255, 255, 0.06);
+  --border: rgba(255, 255, 255, 0.07);
+  --border-a: rgba(96, 165, 250, 0.4);
+  --text: #f1f5f9;
+  --text-muted: #64748b;
+  --text-dim: #94a3b8;
+  --blue: #60a5fa;
+  --violet: #a78bfa;
+  --green: #34d399;
+  --orange: #fb923c;
+  --cyan: #00F0FF;
+  --success: #00FF9D;
+  --grad: linear-gradient(135deg, #60a5fa 0%, #a78bfa 100%);
+  --grad-soft: linear-gradient(135deg, rgba(96, 165, 250, 0.1) 0%, rgba(167, 139, 250, 0.1) 100%);
+  --glow-b: rgba(96, 165, 250, 0.25);
+  --glow-v: rgba(167, 139, 250, 0.25);
+  --glow-c: rgba(0, 240, 255, 0.5);
+  --display: 'Space Grotesk', sans-serif;
+  --body: 'Inter', sans-serif;
+  --mono: 'JetBrains Mono', monospace;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #030305;
+    --bg-1: #08080f;
+    --bg-2: #0d0d1a;
+  }
+}
